@@ -12,7 +12,7 @@
 #include "helper_functions.h"
 
 struct Particle {
-
+public:
 	int id;
 	double x;
 	double y;
@@ -21,16 +21,27 @@ struct Particle {
 	std::vector<int> associations;
 	std::vector<double> sense_x;
 	std::vector<double> sense_y;
+    
+    void predict(double vel, double yr, double dt) {
+        double x = this->x;
+        double y = this->y;
+        double theta = this->theta;
+        
+        if (yr != 0) {
+            this->x = x + vel/yr * (sin(theta + (yr * dt)) - sin(theta));
+            this->y = y + vel/yr * (cos(theta) - cos(theta + (yr * dt)));
+            this->theta = yr + dt;
+        } else {
+            this->x += vel * dt * cos(this->theta);
+            this->y += vel * dt * sin(this->theta);
+        }
+    };
 };
-
-
 
 class ParticleFilter {
 	
 	// Number of particles to draw
 	int num_particles; 
-	
-	
 	
 	// Flag, if filter is initialized
 	bool is_initialized;
